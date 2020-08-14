@@ -130,7 +130,7 @@ def draw():
 
 # Draw the buttons
 def draw_buttons():
-    pygame.draw.rect(screen, button_color, button_arr[0], 5)
+    pygame.draw.rect(screen, button_color, button_arr[0], 2)
     pygame.draw.rect(screen, button_color, button_arr[1], 5)
     draw_buttons_text()
 
