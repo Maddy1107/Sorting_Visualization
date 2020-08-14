@@ -11,8 +11,8 @@ pygame.display.set_caption("Sorting Visualizer")
 mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
 
 # Font
-font = pygame.font.Font('Comic.ttf', 32)
-options = pygame.font.Font('Comic.ttf', 20)
+font = pygame.font.Font('Fonts/Comic.ttf', 32)
+options = pygame.font.Font('Fonts/Comic.ttf', 20)
 
 # Display Size
 display_width = 800
@@ -26,9 +26,9 @@ h_container_height = 50
 h_container_width = display_width + container_width
 
 # Background
-bg = pygame.image.load('background.jpg')
-h_bg = pygame.image.load('h_bg.jpg')
-c_bg = pygame.image.load('c_bg.png')
+bg = pygame.image.load('BG/background.jpg')
+h_bg = pygame.image.load('BG/h_bg.jpg')
+c_bg = pygame.image.load('BG/c_bg.png')
 bg1 = pygame.transform.scale(bg, (display_width + 5, display_height))
 h_bg1 = pygame.transform.scale(h_bg, (h_container_width, h_container_height))
 c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + display_height))
@@ -51,16 +51,11 @@ button_arr = [(100, 10, 100, 30), (870, 10, 300, 30)]
 size_arr = [(810, 100, 120, 30), (940, 100, 120, 30), (1070, 100, 120, 30), (890, 150, 120, 30), (1020, 150, 120, 30)]
 speed_arr = [(810, 250, 120, 30), (940, 250, 120, 30), (1070, 250, 120, 30), (890, 300, 120, 30), (1020, 300, 120, 30)]
 
-# Buttons
-but = pygame.image.load('Size_but1.png')
-but1 = pygame.transform.scale(but, (120, 50))
-
 # Bar Width
 gap = 5
 
 # Screen
 screen = pygame.display.set_mode((display_width + container_width, display_height))
-# container = pygame.display.set_mode((display_width, display_height - h_container_height))
 
 # Colours
 button_color = (0, 255, 255)
