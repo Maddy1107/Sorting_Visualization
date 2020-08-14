@@ -5,7 +5,7 @@ pygame.init()
 
 # Setting Caption
 pygame.display.set_caption("Sorting Visualizer")
-# ----------------------------Global Variabless-----------------------------------------------
+# ----------------------------Global Variablessssss-----------------------------------------------
 
 # Mouse Positions
 mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
