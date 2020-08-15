@@ -281,8 +281,6 @@ def selection_sort():
                 color_arr[iMin] = bar_color
                 iMin = j
                 color_arr[iMin] = bar_selected[1]
-            # else:
-            #     color_arr[j] = bar_color
             refill()
             draw()
             color_arr[j] = bar_color
