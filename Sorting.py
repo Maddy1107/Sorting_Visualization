@@ -305,7 +305,7 @@ while run:
                 generate_new_list()
             speed_button_press()
             if button_press() == 1:
-                selection_sort()
+                bubble_sort()
                 for i in range(len(unsorted_arr)):
                     color_arr[i] = bar_selected[0]
                     color_arr[i + 1] = bar_selected[0]
