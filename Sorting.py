@@ -47,9 +47,15 @@ speed = 1000
 x = 5
 
 # Button Position
-button_arr = [(100, 10, 100, 30), (870, 10, 300, 30)]
-size_arr = [(810, 100, 120, 30), (940, 100, 120, 30), (1070, 100, 120, 30), (890, 150, 120, 30),
-            (1020, 150, 120, 30)]
+button_arr = [(100, 10, 100, 30),
+              (870, 10, 300, 30)
+              ]
+size_arr = [(810, 100, 120, 30),
+            (940, 100, 120, 30),
+            (1070, 100, 120, 30),
+            (890, 150, 120, 30),
+            (1020, 150, 120, 30)
+            ]
 speed_arr = [(810, 250, 120, 30), (940, 250, 120, 30), (1070, 250, 120, 30), (890, 300, 120, 30),
              (1020, 300, 120, 30)]
 
@@ -61,8 +67,7 @@ screen = pygame.display.set_mode((display_width + container_width, display_heigh
 
 # Colours
 button_color = (0, 255, 255)
-bar_color = (255, 0, 0)
-bar_selected = [(0, 0, 255), (0, 225, 200), (204, 153, 255), (119, 221, 119)]
+bar_selected = [(255, 0, 0), (0, 0, 255), (0, 225, 200), (204, 153, 255), (119, 221, 119)]
 screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
 color_arr = []
@@ -74,20 +79,63 @@ arr = False
 
 # ----------------------------Global Variables-----------------------------------------------
 
+# ----------------------------Draw Functions-----------------------------------------------
 
-# ----------------------------Text Functions-----------------------------------------------
+# Draw the Bars
+def draw():
+    global x
+    draw_heading('BUBBLE SORT VISUALIZATION')
+    draw_option_button()
+    draw_buttons()
+    bar_width = round((((display_width - 1) - ((arr_length - 1) * gap)) / arr_length))
+    x = 5
+    if arr_length < 9:
+        pygame.draw.rect(screen, line_color, (display_width + 10, h_container_height, 3, display_height))
+    else:
+        pygame.draw.rect(screen, line_color, (display_width + 5, h_container_height, 3, display_height))
+    pygame.draw.rect(screen, line_color, (0, h_container_height, display_width + container_width, 3))
+    for i in range(len(unsorted_arr)):
+        color_arr.append(bar_selected[0])
+        pygame.draw.rect(screen, color_arr[i], (x, h_container_height + 3, bar_width, unsorted_arr[i]))
+        x = x + bar_width + gap
+    pygame.display.update()
+
+
 # Display Heading
-def display_heading(message):
+def draw_heading(message):
     h_text = font.render(message, True, line_color)
     h_text_rect = h_text.get_rect()
     h_text_rect.center = (h_container_width // 2, h_container_height // 2)
     screen.blit(h_text, h_text_rect)
 
 
-# draw text in button
+# Draw the buttons
+def draw_buttons():
+    pygame.draw.rect(screen, button_color, button_arr[0], 2)
+    pygame.draw.rect(screen, button_color, button_arr[1], 5)
+    draw_buttons_text()
+
+
+# Draw text in button
 def draw_buttons_text():
     screen.blit(options.render('SORT', True, line_color), (120, 10))
     screen.blit(options.render('GENERATE NEW ARRAY', True, line_color), (900, 10))
+
+
+# Option Buttons
+def draw_option_button():
+    pygame.draw.rect(screen, button_color, size_arr[0], 5)
+    pygame.draw.rect(screen, button_color, size_arr[1], 5)
+    pygame.draw.rect(screen, button_color, size_arr[2], 5)
+    pygame.draw.rect(screen, button_color, size_arr[3], 5)
+    pygame.draw.rect(screen, button_color, size_arr[4], 5)
+
+    pygame.draw.rect(screen, button_color, speed_arr[0], 5)
+    pygame.draw.rect(screen, button_color, speed_arr[1], 5)
+    pygame.draw.rect(screen, button_color, speed_arr[2], 5)
+    pygame.draw.rect(screen, button_color, speed_arr[3], 5)
+    pygame.draw.rect(screen, button_color, speed_arr[4], 5)
+    draw_options_text()
 
 
 # Draw the options
@@ -107,66 +155,32 @@ def draw_options_text():
     screen.blit(options.render('V-Fast-1', True, line_color), (1040, 300))
 
 
-# ----------------------------Text Functions-----------------------------------------------
-
 # ----------------------------Draw Functions-----------------------------------------------
 
-# Draw the Bars
-def draw():
-    global x
-    display_heading('BUBBLE SORT VISUALIZATION')
-    draw_option_button()
-    draw_buttons()
-    bar_width = round((((display_width - 1) - ((arr_length - 1) * gap)) / arr_length))
-    x = 5
-    if arr_length < 9:
-        pygame.draw.rect(screen, line_color, (display_width + 10, h_container_height, 3, display_height))
-    else:
-        pygame.draw.rect(screen, line_color, (display_width + 5, h_container_height, 3, display_height))
-    pygame.draw.rect(screen, line_color, (0, h_container_height, display_width + container_width, 3))
+# ----------------------------Functions for manipulating-----------------------------------------------
+
+# Delay
+def delay():
+    pygame.time.delay(speed)
+
+
+# Set new bar color
+def set_color(pos, index):
+    color_arr[pos] = bar_selected[index]
+
+
+# Set the color of final sorted array
+def set_final_color():
     for i in range(len(unsorted_arr)):
-        color_arr.append(bar_color)
-        pygame.draw.rect(screen, color_arr[i], (x, h_container_height + 3, bar_width, unsorted_arr[i]))
-        x = x + bar_width + gap
-    pygame.display.update()
+        set_color(i, 1)
+        set_color(i, 3)
+        refresh()
+        pygame.time.delay(5)
 
 
-# Draw the buttons
-def draw_buttons():
-    pygame.draw.rect(screen, button_color, button_arr[0], 2)
-    pygame.draw.rect(screen, button_color, button_arr[1], 5)
-    draw_buttons_text()
-
-
-# Option Buttons
-def draw_option_button():
-    pygame.draw.rect(screen, button_color, size_arr[0], 5)
-    pygame.draw.rect(screen, button_color, size_arr[1], 5)
-    pygame.draw.rect(screen, button_color, size_arr[2], 5)
-    pygame.draw.rect(screen, button_color, size_arr[3], 5)
-    pygame.draw.rect(screen, button_color, size_arr[4], 5)
-
-    pygame.draw.rect(screen, button_color, speed_arr[0], 5)
-    pygame.draw.rect(screen, button_color, speed_arr[1], 5)
-    pygame.draw.rect(screen, button_color, speed_arr[2], 5)
-    pygame.draw.rect(screen, button_color, speed_arr[3], 5)
-    pygame.draw.rect(screen, button_color, speed_arr[4], 5)
-    draw_options_text()
-
-
-# ----------------------------Draw Functions-----------------------------------------------
-
-# ----------------------------Functions for manipulating and drawing-----------------------------------------------
-
-# Generates a new list
-def generate_new_list():
-    global unsorted_arr, color_arr
-    color_arr = [bar_color] * arr_length
-    unsorted_arr = []
-    while len(unsorted_arr) < arr_length:
-        element = random.randint(100, 500)
-        if element not in unsorted_arr:
-            unsorted_arr.append(element)
+# Refresh
+def refresh():
+    refill()
     draw()
 
 
@@ -176,6 +190,18 @@ def refill():
     screen.blit(bg1, (0, h_container_height + 3))
     screen.blit(h_bg1, (0, 0))
     screen.blit(c_bg1, (display_width + 5, h_container_height + 3))
+
+
+# Generates a new list
+def generate_new_list():
+    global unsorted_arr, color_arr
+    color_arr = [bar_selected[0]] * arr_length
+    unsorted_arr = []
+    while len(unsorted_arr) < arr_length:
+        element = random.randint(100, 500)
+        if element not in unsorted_arr:
+            unsorted_arr.append(element)
+    draw()
 
 
 # Sort & Refresh button press
@@ -251,20 +277,24 @@ def speed_button_press():
 
 # -------------------------------------Sort Functions----------------------------------------------
 
+# Swap
+def swap(pos1, pos2):
+    unsorted_arr[pos1], unsorted_arr[pos2] = unsorted_arr[pos2], unsorted_arr[pos1]
+
+
 # Bubble Sort
 def bubble_sort():
     for i in range(len(unsorted_arr) - 1, -1, -1):
         for j in range(i):
-            color_arr[j] = bar_selected[0]
-            color_arr[j + 1] = bar_selected[0]
-            pygame.time.delay(speed)
+            set_color(j, 1)
+            set_color(j + 1, 1)
+            delay()
             if unsorted_arr[j] > unsorted_arr[j + 1]:
-                unsorted_arr[j], unsorted_arr[j + 1] = unsorted_arr[j + 1], unsorted_arr[j]
-                refill()
-                draw()
-            color_arr[j] = bar_color
-            color_arr[j + 1] = bar_color
-        color_arr[i] = bar_selected[3]
+                swap(j, j + 1)
+                refresh()
+            set_color(j, 0)
+            set_color(j + 1, 0)
+        set_color(i, 4)
 
 
 # Selection Sort
@@ -274,19 +304,18 @@ def selection_sort():
     for i in range(len(unsorted_arr) - 1, -1, -1):
         iMin = 0
         for j in range(i + 1):
-            color_arr[j] = bar_selected[0]
-            color_arr[iMin] = bar_selected[1]
-            pygame.time.delay(speed)
+            set_color(j, 1)
+            set_color(iMin, 2)
+            delay()
             if unsorted_arr[j] > unsorted_arr[iMin]:
-                color_arr[iMin] = bar_color
+                set_color(iMin, 0)
                 iMin = j
-                color_arr[iMin] = bar_selected[1]
-            refill()
-            draw()
-            color_arr[j] = bar_color
-        color_arr[iMin] = bar_color
-        unsorted_arr[i], unsorted_arr[iMin] = unsorted_arr[iMin], unsorted_arr[i]
-        color_arr[i] = bar_selected[3]
+                set_color(iMin, 2)
+            refresh()
+            set_color(j, 0)
+        set_color(iMin, 0)
+        swap(i, iMin)
+        set_color(i, 4)
 
 
 # Insertion Sort
@@ -294,20 +323,16 @@ def insertion_sort():
     for i in range(1, len(unsorted_arr)):
         curr_el = unsorted_arr[i]
         pos = i
-        color_arr[i] = bar_selected[0]
-        color_arr[pos-1] = bar_selected[2]
-        pygame.time.delay(speed)
+        set_color(i, 1)
+        set_color(pos, 2)
+        delay()
         while curr_el < unsorted_arr[pos - 1] and pos > 0:
             unsorted_arr[pos] = unsorted_arr[pos - 1]
             pos = pos - 1
-            color_arr[pos] = bar_selected[0]
-            refill()
-            draw()
-            color_arr[pos] = bar_selected[3]
+            set_color(pos, 1)
+            refresh()
+            set_color(pos, 4)
         unsorted_arr[pos] = curr_el
-    color_arr[pos] = bar_selected[3]
-    refill()
-    draw()
 
 
 # -------------------------------------Sort Functions----------------------------------------------
@@ -327,15 +352,9 @@ while run:
             speed_button_press()
             if button_press() == 1:
                 # bubble_sort()
-                # selection_sort()
-                insertion_sort()
-                for i in range(len(unsorted_arr)):
-                    color_arr[i] = bar_selected[0]
-                    color_arr[i + 1] = bar_selected[0]
-                    color_arr[i] = bar_selected[2]
-                    refill()
-                    draw()
-                    pygame.time.delay(5)
+                selection_sort()
+                # insertion_sort()
+                set_final_color()
             elif button_press() == 2:
                 generate_new_list()
 
