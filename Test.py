@@ -24,6 +24,19 @@ def bubble_sort():
     return count
 
 
+def insertion_sort():
+    for i in range(1, len(arr)):
+        curr_el = arr[i]
+        pos = i
+        while curr_el < arr[pos - 1] and pos > 0:
+            arr[pos] = arr[pos-1]
+            pos = pos - 1
+            print(arr)
+        arr[pos] = curr_el
+    print(arr)
+
+
 print("Sorted:")
 # print(select())
-print(bubble_sort())
+# print(bubble_sort())
+print(insertion_sort())
