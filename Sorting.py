@@ -118,11 +118,15 @@ screen = pygame.display.set_mode((display_width + container_width, display_heigh
 
 # Colours
 button_color = (0, 255, 255)
-bar_selected = [(255, 0, 0), (0, 0, 255), (0, 225, 200), (204, 153, 255), (119, 221, 119)]
+bar_selected = [(51, 153, 255),  # Default Color
+                (204, 0, 0),  # Traverse Color
+                (0, 200, 200),
+                (255, 51, 255),  # Final Color
+                (255, 0, 127)  # Sorted Color
+                ]
 screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
 color_arr = []
-button_hover = (204, 153, 255)
 
 run = True
 
@@ -186,7 +190,6 @@ def draw_option_button():
         pygame.draw.circle(screen, (255, 255, 255), option_pos[11], 3)
     elif algorithm == 2:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[12], 3)
-
     draw_options_text()
 
 
@@ -389,7 +392,6 @@ def bubble_sort():
 
 # Selection Sort
 def selection_sort():
-    print(unsorted_arr)
     for i in range(len(unsorted_arr) - 1, -1, -1):
         iMin = 0
         for j in range(i + 1):
