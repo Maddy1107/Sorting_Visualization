@@ -1,5 +1,5 @@
 arr = [5, 3, 4, 1, 2]
-
+import time
 
 def select():
     global arr
@@ -39,4 +39,5 @@ def insertion_sort():
 print("Sorted:")
 # print(select())
 # print(bubble_sort())
-print(insertion_sort())
+#print(insertion_sort())
+print(time.time())
