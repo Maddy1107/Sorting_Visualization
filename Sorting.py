@@ -17,7 +17,7 @@ mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
 # Font
 font = pygame.font.Font('Fonts/Comic.ttf', 32)
 options = pygame.font.Font('Fonts/Comic.ttf', 20)
-value = pygame.font.Font('Fonts/Comic.ttf', 15)
+value = pygame.font.Font('Fonts/Comic.ttf', 18)
 
 # Display Size
 display_width = 800
@@ -91,7 +91,7 @@ option_pos = [
     (1077, 250),
     (910, 300),
     (1040, 300),
-    # Algo text
+    # Algorithm text
     (830, 345),
     (830, 375),
     (830, 405),
@@ -134,7 +134,7 @@ run = True
 # Draw the Bars
 def draw():
     global x
-    draw_heading('BUBBLE SORT VISUALIZATION')
+    draw_heading('SORT VISUALIZATION')
     draw_option_button()
     draw_buttons()
     values()
@@ -218,15 +218,21 @@ def draw_options_text():
 def values():
     screen.blit(value.render('Length:' + str(arr_length), True, line_color), (810, 500))
     if speed == 0:
-        screen.blit(value.render('Speed:100', True, line_color), (890, 500))
+        screen.blit(value.render('Speed:100', True, line_color), (903, 500))
     elif speed == 1:
-        screen.blit(value.render('Speed:80', True, line_color), (890, 500))
+        screen.blit(value.render('Speed:80', True, line_color), (903, 500))
     elif speed == 2:
-        screen.blit(value.render('Speed:40', True, line_color), (890, 500))
+        screen.blit(value.render('Speed:40', True, line_color), (903, 500))
     elif speed == 3:
-        screen.blit(value.render('Speed:10', True, line_color), (890, 500))
+        screen.blit(value.render('Speed:10', True, line_color), (903, 500))
     elif speed == 4:
-        screen.blit(value.render('Speed:1', True, line_color), (890, 500))
+        screen.blit(value.render('Speed:1', True, line_color), (903, 500))
+    if algorithm == 0:
+        screen.blit(value.render('Algorithm:Bubble Sort', True, line_color), (990, 500))
+    elif algorithm == 1:
+        screen.blit(value.render('Algorithm:Insertion Sort', True, line_color), (990, 500))
+    elif algorithm == 2:
+        screen.blit(value.render('Algorithm:Selection Sort', True, line_color), (990, 500))
 
 
 # Delay
@@ -244,6 +250,16 @@ def delay():
         pygame.time.delay(1)
 
 
+# Select the algorithm
+def sort():
+    if algorithm == 0:
+        bubble_sort()
+    elif algorithm == 1:
+        insertion_sort()
+    elif algorithm == 2:
+        selection_sort()
+
+
 # Set new bar color
 def set_color(pos, index):
     color_arr[pos] = bar_selected[index]
@@ -253,8 +269,8 @@ def set_color(pos, index):
 def set_final_color():
     for i in range(len(unsorted_arr)):
         set_color(i, 1)
-        set_color(i, 3)
         refresh()
+        set_color(i, 3)
         pygame.time.delay(5)
 
 
@@ -326,7 +342,25 @@ def option_button_press():
     for num in range(5):
         if option_pos_validate(num + 5):
             speed = num
-    draw_option_button()
+
+
+# Circle Validate
+def circle_option():
+    global mouse_x, mouse_y, algorithm
+    mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+    for num in range(3):
+        if check_area(mouse_x, mouse_y, option_pos[num + 10][0], option_pos[num + 10][1]) < 5:
+            if num + 10 == 10:
+                algorithm = 0
+            elif num + 10 == 11:
+                algorithm = 1
+            elif num + 10 == 12:
+                algorithm = 2
+
+
+# Checking if the point is inside circle
+def check_area(x1, y1, x2, y2):
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 
 # ----------------------------Functions for manipulating and drawing-----------------------------------------------
@@ -403,6 +437,7 @@ while run:
             run = False
         if event.type == pygame.MOUSEBUTTONUP:
             option_button_press()
+            circle_option()
             if button_press() == 1:
                 sort()
                 set_final_color()
