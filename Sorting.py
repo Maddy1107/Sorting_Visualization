@@ -1,11 +1,15 @@
 import pygame
 import random
+import time
+import math
 
 pygame.init()
 
 # Setting Caption
 pygame.display.set_caption("Sorting Visualizer")
 # ----------------------------Global Variables-----------------------------------------------
+
+# duration, start = 0, time.time()
 
 # Mouse Positions
 mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
@@ -37,6 +41,7 @@ c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + disp
 # Default Sie,Speed,Algorithm
 speed = 2
 arr_length = 40
+algorithm = 0
 
 # Default Array
 unsorted_arr = []
@@ -68,6 +73,10 @@ option_pos = [
     (1070, 250, 120, 30),
     (890, 300, 120, 30),
     (1020, 300, 120, 30),
+    # Algorithm
+    (820, 390),
+    (820, 420),
+    (820, 450),
     # Size Text
     (955, 55),
     (830, 100),
@@ -81,7 +90,12 @@ option_pos = [
     (960, 250),
     (1077, 250),
     (910, 300),
-    (1040, 300)
+    (1040, 300),
+    # Algo text
+    (830, 345),
+    (830, 375),
+    (830, 405),
+    (830, 435)
 
 ]
 
@@ -90,7 +104,9 @@ option_texts = [
     # Size
     'SIZE', 'Huge-100', 'Large-80', 'Medium-40', 'Small-20', 'V-Small-10',
     # Speed
-    'SPEED', 'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1'
+    'SPEED', 'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1',
+    # Algorithm
+    'ALGORITHM:', 'Bubble Sort', 'Insertion Sort', 'Selection Sort'
 
 ]
 
@@ -161,16 +177,39 @@ def draw_buttons_text():
 def draw_option_button():
     for num in range(10):
         pygame.draw.rect(screen, button_color, option_pos[num], 5)
+    for num in range(3):
+        pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 10], 5)
+        pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 10], 3)
+    if algorithm == 0:
+        pygame.draw.circle(screen, (255, 255, 255), option_pos[10], 3)
+    elif algorithm == 1:
+        pygame.draw.circle(screen, (255, 255, 255), option_pos[11], 3)
+    elif algorithm == 2:
+        pygame.draw.circle(screen, (255, 255, 255), option_pos[12], 3)
+
     draw_options_text()
 
 
 # Draw the options
 def draw_options_text():
-    for num in range(12):
-        screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 10])
+    for num in range(16):
+        screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 13])
 
-#Timer
-def draw_timer():
+
+# # Timer
+# def draw_timer():
+#     global duration
+#     duration = time.time() - start
+#     screen.blit(options.render('Elapsed time = ' + str(round(duration, 2)) + 'seconds', True, line_color), (810, 510))
+#
+#
+# # Reset Timer
+# def reset_timer():
+#     global duration, start
+#     duration = 0
+#     start = time.time()
+#     draw_timer()
+
 
 # ----------------------------Draw Functions-----------------------------------------------
 
@@ -364,8 +403,8 @@ while run:
         if event.type == pygame.MOUSEBUTTONUP:
             option_button_press()
             if button_press() == 1:
-                # bubble_sort()
-                selection_sort()
+                bubble_sort()
+                # selection_sort()
                 # insertion_sort()
                 set_final_color()
             elif button_press() == 2:
