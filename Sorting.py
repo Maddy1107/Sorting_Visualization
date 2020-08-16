@@ -326,6 +326,7 @@ def option_button_press():
     for num in range(5):
         if option_pos_validate(num + 5):
             speed = num
+    draw_option_button()
 
 
 # ----------------------------Functions for manipulating and drawing-----------------------------------------------
@@ -403,9 +404,7 @@ while run:
         if event.type == pygame.MOUSEBUTTONUP:
             option_button_press()
             if button_press() == 1:
-                bubble_sort()
-                # selection_sort()
-                # insertion_sort()
+                sort()
                 set_final_color()
             elif button_press() == 2:
                 generate_new_list()
