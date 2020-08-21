@@ -55,8 +55,8 @@ x = 5
 
 # Button Position
 button_pos = [
-    (100, 10, 100, 30),
-    (870, 10, 300, 30)
+    (1050, 370, 100, 50),
+    (1034, 450, 130, 50)
 ]
 
 # Option Button Positions
@@ -77,6 +77,9 @@ option_pos = [
     (820, 390),
     (820, 420),
     (820, 450),
+    (820, 480),
+    (820, 510),
+    (820, 540),
     # Size Text
     (955, 55),
     (830, 100),
@@ -95,18 +98,20 @@ option_pos = [
     (830, 345),
     (830, 375),
     (830, 405),
-    (830, 435)
+    (830, 435),
+    (830, 465),
+    (830, 495)
 
 ]
 
-# Option Text Positions
+# Option Texts
 option_texts = [
     # Size
     'SIZE', 'Huge-100', 'Large-80', 'Medium-40', 'Small-20', 'V-Small-10',
     # Speed
     'SPEED', 'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1',
     # Algorithm
-    'ALGORITHM:', 'Bubble Sort', 'Insertion Sort', 'Selection Sort'
+    'ALGORITHM:', 'Bubble Sort', 'Insertion Sort', 'Selection Sort', 'Quick Sort', 'Merge Sort'
 
 ]
 
@@ -119,7 +124,7 @@ screen = pygame.display.set_mode((display_width + container_width, display_heigh
 # Colours
 button_color = (0, 255, 255)
 bar_selected = [(51, 153, 255),  # Default Color
-                (204, 0, 0),  # Traverse Color
+                (204, 255, 0),  # Traverse Color
                 (0, 200, 200),
                 (255, 51, 255),  # Final Color
                 (255, 0, 127)  # Sorted Color
@@ -166,37 +171,41 @@ def draw_heading(message):
 
 # Draw the buttons
 def draw_buttons():
-    pygame.draw.rect(screen, button_color, button_pos[0], 2)
+    pygame.draw.rect(screen, button_color, button_pos[0], 5)
     pygame.draw.rect(screen, button_color, button_pos[1], 5)
     draw_buttons_text()
 
 
 # Draw text in button
 def draw_buttons_text():
-    screen.blit(options.render('SORT', True, line_color), (120, 10))
-    screen.blit(options.render('GENERATE NEW ARRAY', True, line_color), (900, 10))
+    screen.blit(options.render('SORT', True, line_color), (1070, 376))
+    screen.blit(options.render('GENERATE', True, line_color), (1045, 460))
 
 
 # Option Buttons
 def draw_option_button():
     for num in range(10):
         pygame.draw.rect(screen, button_color, option_pos[num], 5)
-    for num in range(3):
+    for num in range(5):
         pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 10], 5)
-        pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 10], 3)
+
     if algorithm == 0:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[10], 3)
     elif algorithm == 1:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[11], 3)
     elif algorithm == 2:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[12], 3)
+    elif algorithm == 3:
+        pygame.draw.circle(screen, (255, 255, 255), option_pos[13], 3)
+    elif algorithm == 4:
+        pygame.draw.circle(screen, (255, 255, 255), option_pos[14], 3)
     draw_options_text()
 
 
 # Draw the options
 def draw_options_text():
-    for num in range(16):
-        screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 13])
+    for num in range(18):
+        screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 16])
 
 
 # # Timer
@@ -219,23 +228,27 @@ def draw_options_text():
 # ----------------------------Functions for manipulating-----------------------------------------------
 
 def values():
-    screen.blit(value.render('Length:' + str(arr_length), True, line_color), (810, 500))
+    screen.blit(value.render('Length:' + str(arr_length), True, line_color), (810, 550))
     if speed == 0:
-        screen.blit(value.render('Speed:100', True, line_color), (903, 500))
+        screen.blit(value.render('Speed:100', True, line_color), (903, 550))
     elif speed == 1:
-        screen.blit(value.render('Speed:80', True, line_color), (903, 500))
+        screen.blit(value.render('Speed:80', True, line_color), (903, 550))
     elif speed == 2:
-        screen.blit(value.render('Speed:40', True, line_color), (903, 500))
+        screen.blit(value.render('Speed:40', True, line_color), (903, 550))
     elif speed == 3:
-        screen.blit(value.render('Speed:10', True, line_color), (903, 500))
+        screen.blit(value.render('Speed:10', True, line_color), (903, 550))
     elif speed == 4:
-        screen.blit(value.render('Speed:1', True, line_color), (903, 500))
+        screen.blit(value.render('Speed:1', True, line_color), (903, 550))
     if algorithm == 0:
-        screen.blit(value.render('Algorithm:Bubble Sort', True, line_color), (990, 500))
+        screen.blit(value.render('Algorithm:Bubble Sort', True, line_color), (990, 550))
     elif algorithm == 1:
-        screen.blit(value.render('Algorithm:Insertion Sort', True, line_color), (990, 500))
+        screen.blit(value.render('Algorithm:Insertion Sort', True, line_color), (990, 550))
     elif algorithm == 2:
-        screen.blit(value.render('Algorithm:Selection Sort', True, line_color), (990, 500))
+        screen.blit(value.render('Algorithm:Selection Sort', True, line_color), (990, 550))
+    elif algorithm == 3:
+        screen.blit(value.render('Algorithm:Quick Sort', True, line_color), (990, 550))
+    elif algorithm == 4:
+        screen.blit(value.render('Algorithm:Merge Sort', True, line_color), (990, 550))
 
 
 # Delay
@@ -261,6 +274,8 @@ def sort():
         insertion_sort()
     elif algorithm == 2:
         selection_sort()
+    elif algorithm == 3:
+        quickSort(unsorted_arr, 0, len(unsorted_arr) - 1)
 
 
 # Set new bar color
@@ -351,7 +366,7 @@ def option_button_press():
 def circle_option():
     global mouse_x, mouse_y, algorithm
     mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
-    for num in range(3):
+    for num in range(5):
         if check_area(mouse_x, mouse_y, option_pos[num + 10][0], option_pos[num + 10][1]) < 5:
             if num + 10 == 10:
                 algorithm = 0
@@ -359,6 +374,10 @@ def circle_option():
                 algorithm = 1
             elif num + 10 == 12:
                 algorithm = 2
+            elif num + 10 == 13:
+                algorithm = 3
+            elif num + 10 == 14:
+                algorithm = 4
 
 
 # Checking if the point is inside circle
@@ -426,6 +445,29 @@ def insertion_sort():
         unsorted_arr[pos] = curr_el
 
 
+# Quick Sort
+def quickSort(arr, low, high):
+    if low < high:
+        pi = partition(arr, low, high)
+        quickSort(arr, low, pi - 1)
+        quickSort(arr, pi + 1, high)
+    print(arr)
+
+
+def partition(arr, low, high):
+    i = (low - 1)
+    pivot = arr[high]
+    print("Pivot:" + str(pivot))
+    for j in range(low, high):
+        set_color(j, 1)
+        if arr[j] <= pivot:
+            i = i + 1
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+
+
 # -------------------------------------Sort Functions----------------------------------------------
 
 # -------------------------------------Main----------------------------------------------
@@ -436,7 +478,8 @@ while run:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
+            pygame.quit()
+            quit()
         if event.type == pygame.MOUSEBUTTONUP:
             option_button_press()
             circle_option()
