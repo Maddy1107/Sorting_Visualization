@@ -15,8 +15,9 @@ pygame.display.set_caption("Sorting Visualizer")
 mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
 
 # Font
-font = pygame.font.Font('Fonts/Comic.ttf', 32)
-options = pygame.font.Font('Fonts/Comic.ttf', 20)
+font = pygame.font.Font('Fonts/Bold.ttf', 32)
+options = pygame.font.Font('Fonts/Bold.ttf', 20)
+options1 = pygame.font.Font('Fonts/Bold.ttf', 30)
 value = pygame.font.Font('Fonts/Comic.ttf', 18)
 
 # Display Size
@@ -56,7 +57,7 @@ x = 5
 # Button Position
 button_pos = [
     (1050, 370, 100, 50),
-    (1034, 450, 130, 50)
+    (1015, 450, 160, 50)
 ]
 
 # Option Button Positions
@@ -81,14 +82,14 @@ option_pos = [
     (820, 510),
     (820, 540),
     # Size Text
-    (955, 55),
+    (800, 55),
     (830, 100),
     (960, 100),
     (1077, 100),
     (910, 150),
     (1030, 150),
     # Speed Text
-    (955, 200),
+    (800, 200),
     (815, 250),
     (960, 250),
     (1077, 250),
@@ -107,9 +108,11 @@ option_pos = [
 # Option Texts
 option_texts = [
     # Size
-    'SIZE', 'Huge-100', 'Large-80', 'Medium-40', 'Small-20', 'V-Small-10',
+    '------------------------SIZE-------------------------',
+    'Huge-100', 'Large-80', 'Medium-40', 'Small-20', 'V-Small-10',
     # Speed
-    'SPEED', 'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1',
+    '---------------------- SPEED-------------------------',
+    'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1',
     # Algorithm
     'ALGORITHM:', 'Bubble Sort', 'Insertion Sort', 'Selection Sort', 'Quick Sort', 'Merge Sort'
 
@@ -122,7 +125,7 @@ gap = 5
 screen = pygame.display.set_mode((display_width + container_width, display_height))
 
 # Colours
-button_color = (0, 255, 255)
+button_color = (200, 100, 255)
 bar_selected = [(51, 153, 255),  # Default Color
                 (204, 255, 0),  # Traverse Color
                 (0, 200, 200),
@@ -171,23 +174,34 @@ def draw_heading(message):
 
 # Draw the buttons
 def draw_buttons():
-    pygame.draw.rect(screen, button_color, button_pos[0], 5)
-    pygame.draw.rect(screen, button_color, button_pos[1], 5)
+    pygame.draw.rect(screen, button_color, button_pos[0])
+    pygame.draw.rect(screen, button_color, button_pos[1])
+    pygame.draw.rect(screen, (0, 0, 0), button_pos[0], 2)
+    pygame.draw.rect(screen, (0, 0, 0), button_pos[1], 2)
+    if button_press() == 1:
+        pygame.draw.rect(screen, (255, 100, 0), button_pos[0])
+    if button_press() == 2:
+        pygame.draw.rect(screen, (255, 100, 0), button_pos[1])
     draw_buttons_text()
 
 
 # Draw text in button
 def draw_buttons_text():
-    screen.blit(options.render('SORT', True, line_color), (1070, 376))
-    screen.blit(options.render('GENERATE', True, line_color), (1045, 460))
+    screen.blit(options1.render('SORT', True, line_color), (1060, 376))
+    screen.blit(options1.render('GENERATE', True, line_color), (1020, 455))
 
 
 # Option Buttons
 def draw_option_button():
     for num in range(10):
-        pygame.draw.rect(screen, button_color, option_pos[num], 5)
+        pygame.draw.rect(screen, button_color, option_pos[num])
+        pygame.draw.rect(screen, (0, 0, 0), option_pos[num], 2)
+        if option_pos_validate(num):
+            pygame.draw.rect(screen, (255, 100, 0), option_pos[num])
+
     for num in range(5):
         pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 10], 5)
+        pygame.draw.circle(screen, (255, 0, 0), option_pos[num + 10], 3)
 
     if algorithm == 0:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[10], 3)
@@ -451,20 +465,23 @@ def quickSort(arr, low, high):
         pi = partition(arr, low, high)
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
-    print(arr)
+    refresh()
 
 
 def partition(arr, low, high):
     i = (low - 1)
     pivot = arr[high]
-    print("Pivot:" + str(pivot))
     for j in range(low, high):
         set_color(j, 1)
+        set_color(i + 1, 1)
+        delay()
         if arr[j] <= pivot:
             i = i + 1
-            arr[i], arr[j] = arr[j], arr[i]
-
-    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+            swap(i, j)
+        set_color(i + 1, 0)
+        set_color(j, 0)
+        refresh()
+    swap(i + 1, high)
     return i + 1
 
 
