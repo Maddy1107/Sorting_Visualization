@@ -126,11 +126,15 @@ screen = pygame.display.set_mode((display_width + container_width, display_heigh
 
 # Colours
 button_color = (200, 100, 255)
-bar_selected = [(51, 153, 255),  # Default Color
-                (204, 255, 0),  # Traverse Color
-                (0, 200, 200),
-                (255, 51, 255),  # Final Color
-                (255, 0, 127)  # Sorted Color
+bar_selected = [(36, 226, 31),  # Default Color
+                (255, 0, 0),  # Traverse Color
+                (0, 255, 255),  # Final Color
+                (255, 0, 127),  # Sorted Color
+                # Quick Sort
+                (250, 24, 250),  # Pivot
+                (32, 70, 73),  # Border
+                (183, 4, 238),  # Left
+                (6, 2, 105)  # Right
                 ]
 screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
@@ -158,7 +162,7 @@ def draw():
         pygame.draw.rect(screen, line_color, (display_width + 5, h_container_height, 3, display_height))
     pygame.draw.rect(screen, line_color, (0, h_container_height, display_width + container_width, 3))
     for i in range(len(unsorted_arr)):
-        color_arr.append(bar_selected[0])
+        color_arr.append((bar_selected[0]))
         pygame.draw.rect(screen, color_arr[i], (x, h_container_height + 3, bar_width, unsorted_arr[i]))
         x = x + bar_width + gap
     pygame.display.update()
@@ -299,11 +303,15 @@ def set_color(pos, index):
 
 # Set the color of final sorted array
 def set_final_color():
+    r = 71
+    g = 179
+    b = 64
     for i in range(len(unsorted_arr)):
         set_color(i, 1)
+        set_color(i+1, 1)
         refresh()
-        set_color(i, 3)
-        pygame.time.delay(5)
+        set_color(i, 2)
+        pygame.time.delay(100)
 
 
 # Refresh
@@ -463,25 +471,35 @@ def insertion_sort():
 def quickSort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
+        # for i in range(low, pi):
+        #     set_color(i, 6)
+        # for i in range(pi + 1, high):
+        #     set_color(i, 7)
+        pygame.time.delay(2000)
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
     refresh()
 
 
 def partition(arr, low, high):
-    i = (low - 1)
+    i = low - 1
     pivot = arr[high]
+    set_color(high, 4)
     for j in range(low, high):
+        set_color(i+1, 5)
         set_color(j, 1)
-        set_color(i + 1, 1)
         delay()
         if arr[j] <= pivot:
+            set_color(i+1, 0)
             i = i + 1
+            set_color(i+1, 5)
             swap(i, j)
-        set_color(i + 1, 0)
+        set_color(i+1, 5)
         set_color(j, 0)
         refresh()
     swap(i + 1, high)
+    set_color(i + 1, 3)
+    #set_color(high, 0)
     return i + 1
 
 

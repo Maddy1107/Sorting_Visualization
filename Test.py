@@ -1,4 +1,4 @@
-arr = [5, 3, 4, 1, 2]
+arr = [235, 122, 252, 267, 253, 228, 294, 464, 396, 299, 483, 394, 177, 326, 339, 288, 331, 352, 484, 481, 204, 115, 450, 102, 280, 284, 496, 317, 479, 463, 178, 373, 370, 281, 283, 458, 105, 124, 158, 486]
 import time
 
 
@@ -38,16 +38,14 @@ def insertion_sort():
 
 
 def partition(arr, low, high):
-    i = (low - 1)
+    i = low
     pivot = arr[high]
-    print("Pivot:" + str(pivot))
     for j in range(low, high):
-        if arr[j] <= pivot:
-            i = i + 1
+        if arr[j] < pivot:
             arr[i], arr[j] = arr[j], arr[i]
-
-    arr[i + 1], arr[high] = arr[high], arr[i + 1]
-    return i + 1
+            i = i + 1
+    arr[i], arr[high] = arr[high], arr[i]
+    return i
 
 
 def quickSort(arr, low, high):
@@ -56,6 +54,7 @@ def quickSort(arr, low, high):
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
     print(arr)
+
 
 print("Sorted:")
 # print(select())
