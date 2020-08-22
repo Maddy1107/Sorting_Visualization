@@ -52,7 +52,7 @@ while len(unsorted_arr) < arr_length:
         unsorted_arr.append(element)
 
 # Bar Positions
-x = 5
+x = display_height
 
 # Button Position
 button_pos = [
@@ -127,14 +127,20 @@ screen = pygame.display.set_mode((display_width + container_width, display_heigh
 # Colours
 button_color = (200, 100, 255)
 bar_selected = [(36, 226, 31),  # Default Color
-                (255, 0, 0),  # Traverse Color
+                (0, 0, 255),  # Traverse Color
                 (0, 255, 255),  # Final Color
                 (255, 0, 127),  # Sorted Color
+                # Insertion Sort
+                (255, 255, 0),  # Position Color
                 # Quick Sort
-                (250, 24, 250),  # Pivot
+                (255, 24, 0),  # Pivot
                 (32, 70, 73),  # Border
                 (183, 4, 238),  # Left
-                (6, 2, 105)  # Right
+                (6, 2, 105),  # Right
+                # Selection Sort
+                (51, 102, 0),  # Selected(iMin)
+                # Merge Sort
+                (128, 0, 0)  # Final Traverse Color
                 ]
 screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
@@ -163,7 +169,15 @@ def draw():
     pygame.draw.rect(screen, line_color, (0, h_container_height, display_width + container_width, 3))
     for i in range(len(unsorted_arr)):
         color_arr.append((bar_selected[0]))
-        pygame.draw.rect(screen, color_arr[i], (x, h_container_height + 3, bar_width, unsorted_arr[i]))
+        if arr_length == 100 or arr_length == 80:
+            pygame.draw.rect(screen, color_arr[i], (x, display_height - 3, bar_width, -unsorted_arr[i]))
+            pygame.draw.rect(screen, (0, 0, 0), (x, display_height - 3, bar_width, -unsorted_arr[i]), 1)
+        elif arr_length == 10:
+            pygame.draw.rect(screen, color_arr[i], (x, display_height - 3, bar_width, -unsorted_arr[i]))
+            pygame.draw.rect(screen, (0, 0, 0), (x, display_height - 3, bar_width, -unsorted_arr[i]), 3)
+        else:
+            pygame.draw.rect(screen, color_arr[i], (x, display_height - 3, bar_width, -unsorted_arr[i]))
+            pygame.draw.rect(screen, (0, 0, 0), (x, display_height - 3, bar_width, -unsorted_arr[i]), 2)
         x = x + bar_width + gap
     pygame.display.update()
 
@@ -294,6 +308,8 @@ def sort():
         selection_sort()
     elif algorithm == 3:
         quickSort(unsorted_arr, 0, len(unsorted_arr) - 1)
+    elif algorithm == 4:
+        merge_sort(unsorted_arr, 0, len(unsorted_arr) - 1)
 
 
 # Set new bar color
@@ -303,12 +319,9 @@ def set_color(pos, index):
 
 # Set the color of final sorted array
 def set_final_color():
-    r = 71
-    g = 179
-    b = 64
     for i in range(len(unsorted_arr)):
-        set_color(i, 1)
-        set_color(i+1, 1)
+        color_arr[i] = (255, 255, 0)
+        color_arr[i + 1] = (255, 255, 0)
         refresh()
         set_color(i, 2)
         pygame.time.delay(100)
@@ -428,7 +441,7 @@ def bubble_sort():
                 refresh()
             set_color(j, 0)
             set_color(j + 1, 0)
-        set_color(i, 4)
+        set_color(i, 3)
 
 
 # Selection Sort
@@ -437,17 +450,17 @@ def selection_sort():
         iMin = 0
         for j in range(i + 1):
             set_color(j, 1)
-            set_color(iMin, 2)
+            set_color(iMin, 9)
             delay()
             if unsorted_arr[j] > unsorted_arr[iMin]:
                 set_color(iMin, 0)
                 iMin = j
-                set_color(iMin, 2)
+                set_color(iMin, 9)
             refresh()
             set_color(j, 0)
         set_color(iMin, 0)
         swap(i, iMin)
-        set_color(i, 4)
+        set_color(i, 3)
 
 
 # Insertion Sort
@@ -456,26 +469,22 @@ def insertion_sort():
         curr_el = unsorted_arr[i]
         pos = i
         set_color(i, 1)
-        set_color(pos, 2)
+        set_color(pos, 1)
         delay()
         while curr_el < unsorted_arr[pos - 1] and pos > 0:
             unsorted_arr[pos] = unsorted_arr[pos - 1]
             pos = pos - 1
-            set_color(pos, 1)
-            refresh()
             set_color(pos, 4)
+            refresh()
+            set_color(pos, 3)
         unsorted_arr[pos] = curr_el
+    set_color(i, 3)
 
 
 # Quick Sort
 def quickSort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
-        # for i in range(low, pi):
-        #     set_color(i, 6)
-        # for i in range(pi + 1, high):
-        #     set_color(i, 7)
-        pygame.time.delay(2000)
         quickSort(arr, low, pi - 1)
         quickSort(arr, pi + 1, high)
     refresh()
@@ -484,23 +493,73 @@ def quickSort(arr, low, high):
 def partition(arr, low, high):
     i = low - 1
     pivot = arr[high]
-    set_color(high, 4)
+    set_color(high, 5)
     for j in range(low, high):
-        set_color(i+1, 5)
+        set_color(i + 1, 6)
         set_color(j, 1)
         delay()
         if arr[j] <= pivot:
             set_color(i+1, 0)
             i = i + 1
-            set_color(i+1, 5)
+            set_color(i + 1, 6)
             swap(i, j)
-        set_color(i+1, 5)
+            refresh()
+        set_color(i + 1, 3)
         set_color(j, 0)
-        refresh()
     swap(i + 1, high)
-    set_color(i + 1, 3)
-    #set_color(high, 0)
+    # set_color(i + 1, 3)
+    set_color(high, 0)
     return i + 1
+
+
+# Merge Sort
+def merge_sort(array, l, r):
+    mid = (l + r) // 2
+    if l < r:
+        merge_sort(array, l, mid)
+        merge_sort(array, mid + 1, r)
+        merge(array, l, mid, mid + 1, r)
+
+
+def merge(array, x1, y1, x2, y2):
+    i = x1
+    j = x2
+    temp = []
+    while i <= y1 and j <= y2:
+        set_color(i, 1)
+        set_color(j, 1)
+        delay()
+        refresh()
+        set_color(i, 10)
+        set_color(j, 10)
+        if array[i] < array[j]:
+            temp.append(array[i])
+            i += 1
+        else:
+            temp.append(array[j])
+            j += 1
+    while i <= y1:
+        set_color(i, 1)
+        refresh()
+        set_color(i, 0)
+        temp.append(array[i])
+        i += 1
+    while j <= y2:
+        set_color(j, 1)
+        refresh()
+        set_color(j, 0)
+        temp.append(array[j])
+        j += 1
+    j = 0
+    for i in range(x1, y2 + 1):
+        array[i] = temp[j]
+        j += 1
+        set_color(i, 3)
+        refresh()
+        if y2 - x1 == len(array) - 2:
+            set_color(i, 5)
+        else:
+            set_color(i, 3)
 
 
 # -------------------------------------Sort Functions----------------------------------------------
@@ -515,6 +574,8 @@ while run:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
+        # if event.type == pygame.MOUSEMOTION:
+        #     draw_buttons()
         if event.type == pygame.MOUSEBUTTONUP:
             option_button_press()
             circle_option()
