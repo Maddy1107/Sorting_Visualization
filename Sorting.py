@@ -25,7 +25,7 @@ display_width = 800
 display_height = 600
 
 # Manipulation Container Size
-container_width = 400
+container_width = 408
 
 # Header Container Size
 h_container_height = 50
@@ -39,10 +39,13 @@ bg1 = pygame.transform.scale(bg, (display_width + 5, display_height))
 h_bg1 = pygame.transform.scale(h_bg, (h_container_width, h_container_height))
 c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + display_height))
 
-# Default Sie,Speed,Algorithm
+# Default Size,Speed,Algorithm
 speed = 2
 arr_length = 40
 algorithm = 0
+
+# Text Input
+user_element = ""
 
 # Default Array
 unsorted_arr = []
@@ -89,7 +92,7 @@ option_pos = [
     (910, 150),
     (1030, 150),
     # Speed Text
-    (800, 200),
+    (800, 220),
     (815, 250),
     (960, 250),
     (1077, 250),
@@ -144,7 +147,14 @@ bar_selected = [(36, 226, 31),  # Default Color
                 ]
 screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
+inactive_color = (128, 128, 128)
+active_color = (255, 255, 255)
 color_arr = []
+
+# Input Box
+active = False
+box_color = inactive_color
+input_box = pygame.Rect(810, 190, 395, 33)
 
 run = True
 
@@ -157,6 +167,7 @@ run = True
 def draw():
     global x
     draw_heading('SORT VISUALIZATION')
+    draw_text_box()
     draw_option_button()
     draw_buttons()
     values()
@@ -240,6 +251,21 @@ def draw_options_text():
         screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 16])
 
 
+def draw_text_box():
+    global box_color
+    if check_text():
+        box_color = active_color
+        user_input()
+    elif not check_text() and user_element != "":
+        box_color = active_color
+        user_input()
+    else:
+        box_color = inactive_color
+    pygame.draw.rect(screen, box_color, input_box)
+    pygame.draw.rect(screen, (0, 0, 0), input_box, 2)
+    screen.blit(value.render(user_element, True, line_color), (input_box.x + 5, input_box.y + 4))
+
+
 # # Timer
 # def draw_timer():
 #     global duration
@@ -259,28 +285,66 @@ def draw_options_text():
 
 # ----------------------------Functions for manipulating-----------------------------------------------
 
+# Change text to array
+def text_to_array():
+    global user_element, arr_length, unsorted_arr
+    unsorted_arr = []
+    user_txt = ""
+    for i in user_element:
+        if i == '[':
+            continue
+        elif i == ',' or i == ']':
+            unsorted_arr.append(int(user_txt))
+            user_txt = ""
+        else:
+            user_txt += i
+    user_element = ""
+    arr_length = len(unsorted_arr)
+    refresh()
+
+
+# User Input
+def user_input():
+    global user_element
+    for eve in pygame.event.get():
+        if eve.type == pygame.KEYDOWN:
+            if eve.key == pygame.K_LEFTBRACKET or eve.key == pygame.K_RIGHTBRACKET \
+                    or eve.key == pygame.K_COMMA or eve.key == pygame.K_0 \
+                    or eve.key == pygame.K_1 or eve.key == pygame.K_2 \
+                    or eve.key == pygame.K_3 or eve.key == pygame.K_4 \
+                    or eve.key == pygame.K_5 or eve.key == pygame.K_6 \
+                    or eve.key == pygame.K_7 or eve.key == pygame.K_8 \
+                    or eve.key == pygame.K_9:
+                user_element += str(chr(eve.key))
+            if eve.key == pygame.K_BACKSPACE:
+                user_element = user_element[:-1]
+            if eve.key == pygame.K_RETURN:
+                text_to_array()
+
+
+# Show selected values
 def values():
     screen.blit(value.render('Length:' + str(arr_length), True, line_color), (810, 550))
     if speed == 0:
-        screen.blit(value.render('Speed:100', True, line_color), (903, 550))
+        screen.blit(value.render('|Speed:100', True, line_color), (899, 550))
     elif speed == 1:
-        screen.blit(value.render('Speed:80', True, line_color), (903, 550))
+        screen.blit(value.render('|Speed:80', True, line_color), (899, 550))
     elif speed == 2:
-        screen.blit(value.render('Speed:40', True, line_color), (903, 550))
+        screen.blit(value.render('|Speed:40', True, line_color), (899, 550))
     elif speed == 3:
-        screen.blit(value.render('Speed:10', True, line_color), (903, 550))
+        screen.blit(value.render('|Speed:10', True, line_color), (899, 550))
     elif speed == 4:
-        screen.blit(value.render('Speed:1', True, line_color), (903, 550))
+        screen.blit(value.render('|Speed:1', True, line_color), (899, 550))
     if algorithm == 0:
-        screen.blit(value.render('Algorithm:Bubble Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Bubble Sort', True, line_color), (990, 550))
     elif algorithm == 1:
-        screen.blit(value.render('Algorithm:Insertion Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Insertion Sort', True, line_color), (990, 550))
     elif algorithm == 2:
-        screen.blit(value.render('Algorithm:Selection Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Selection Sort', True, line_color), (990, 550))
     elif algorithm == 3:
-        screen.blit(value.render('Algorithm:Quick Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Quick Sort', True, line_color), (990, 550))
     elif algorithm == 4:
-        screen.blit(value.render('Algorithm:Merge Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Merge Sort', True, line_color), (990, 550))
 
 
 # Delay
@@ -420,6 +484,16 @@ def check_area(x1, y1, x2, y2):
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 
+# Check if mouse pointer in textbox
+def check_text():
+    global mouse_x, mouse_y
+    mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
+    if input_box.x < mouse_x < input_box.x + input_box.width and \
+            input_box.y < mouse_y < input_box.y + input_box.height:
+        return True
+    return False
+
+
 # ----------------------------Functions for manipulating and drawing-----------------------------------------------
 
 # -------------------------------------Sort Functions----------------------------------------------
@@ -499,7 +573,7 @@ def partition(arr, low, high):
         set_color(j, 1)
         delay()
         if arr[j] <= pivot:
-            set_color(i+1, 0)
+            set_color(i + 1, 0)
             i = i + 1
             set_color(i + 1, 6)
             swap(i, j)
