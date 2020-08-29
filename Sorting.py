@@ -66,11 +66,12 @@ button_pos = [
 # Option Button Positions
 option_pos = [
     # Size
-    (810, 100, 120, 30),
-    (940, 100, 120, 30),
-    (1070, 100, 120, 30),
-    (890, 150, 120, 30),
-    (1020, 150, 120, 30),
+    (815, 80, 120, 30),
+    (945, 80, 120, 30),
+    (1075, 80, 120, 30),
+    (815, 120, 120, 30),
+    (945, 120, 120, 30),
+    (1075, 120, 120, 30),
     # Speed
     (810, 250, 120, 30),
     (940, 250, 120, 30),
@@ -86,11 +87,12 @@ option_pos = [
     (820, 540),
     # Size Text
     (800, 55),
-    (830, 100),
-    (960, 100),
-    (1077, 100),
-    (910, 150),
-    (1030, 150),
+    (830, 80),
+    (970, 80),
+    (1087, 80),
+    (817, 120),
+    (958, 120),
+    (1083, 120),
     # Speed Text
     (800, 220),
     (815, 250),
@@ -112,7 +114,7 @@ option_pos = [
 option_texts = [
     # Size
     '------------------------SIZE-------------------------',
-    'Huge-100', 'Large-80', 'Medium-40', 'Small-20', 'V-Small-10',
+    'Huge-400', 'XL-100', 'Large-80', 'Medium-40', 'Small-20', 'V-Small-10',
     # Speed
     '---------------------- SPEED-------------------------',
     'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1',
@@ -180,7 +182,9 @@ def draw():
     pygame.draw.rect(screen, line_color, (0, h_container_height, display_width + container_width, 3))
     for i in range(len(unsorted_arr)):
         color_arr.append((bar_selected[0]))
-        if arr_length == 100 or arr_length == 80:
+        if arr_length == 400:
+            pygame.draw.rect(screen, color_arr[i], (x, display_height - 3, bar_width, -unsorted_arr[i]))
+        elif arr_length == 100 or arr_length == 80:
             pygame.draw.rect(screen, color_arr[i], (x, display_height - 3, bar_width, -unsorted_arr[i]))
             pygame.draw.rect(screen, (0, 0, 0), (x, display_height - 3, bar_width, -unsorted_arr[i]), 1)
         elif arr_length == 10:
@@ -222,33 +226,35 @@ def draw_buttons_text():
 
 # Option Buttons
 def draw_option_button():
-    for num in range(10):
+    screen.blit(options.render('or', True, line_color), (1020, 150))
+    screen.blit(options.render('Enter your numbers manually(1-400)', True, line_color), (825, 165))
+    for num in range(11):
         pygame.draw.rect(screen, button_color, option_pos[num])
         pygame.draw.rect(screen, (0, 0, 0), option_pos[num], 2)
         if option_pos_validate(num):
             pygame.draw.rect(screen, (255, 100, 0), option_pos[num])
 
     for num in range(5):
-        pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 10], 5)
-        pygame.draw.circle(screen, (255, 0, 0), option_pos[num + 10], 3)
+        pygame.draw.circle(screen, (0, 0, 0), option_pos[num + 11], 5)
+        pygame.draw.circle(screen, (255, 0, 0), option_pos[num + 11], 3)
 
     if algorithm == 0:
-        pygame.draw.circle(screen, (255, 255, 255), option_pos[10], 3)
-    elif algorithm == 1:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[11], 3)
-    elif algorithm == 2:
+    elif algorithm == 1:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[12], 3)
-    elif algorithm == 3:
+    elif algorithm == 2:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[13], 3)
-    elif algorithm == 4:
+    elif algorithm == 3:
         pygame.draw.circle(screen, (255, 255, 255), option_pos[14], 3)
+    elif algorithm == 4:
+        pygame.draw.circle(screen, (255, 255, 255), option_pos[15], 3)
     draw_options_text()
 
 
 # Draw the options
 def draw_options_text():
-    for num in range(18):
-        screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 16])
+    for num in range(19):
+        screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 17])
 
 
 def draw_text_box():
@@ -264,21 +270,6 @@ def draw_text_box():
     pygame.draw.rect(screen, box_color, input_box)
     pygame.draw.rect(screen, (0, 0, 0), input_box, 2)
     screen.blit(value.render(user_element, True, line_color), (input_box.x + 5, input_box.y + 4))
-
-
-# # Timer
-# def draw_timer():
-#     global duration
-#     duration = time.time() - start
-#     screen.blit(options.render('Elapsed time = ' + str(round(duration, 2)) + 'seconds', True, line_color), (810, 510))
-#
-#
-# # Reset Timer
-# def reset_timer():
-#     global duration, start
-#     duration = 0
-#     start = time.time()
-#     draw_timer()
 
 
 # ----------------------------Draw Functions-----------------------------------------------
@@ -442,22 +433,24 @@ def option_pos_validate(index):
 # Option button press
 def option_button_press():
     global arr_length, speed
-    for num in range(5):
+    for num in range(6):
         if option_pos_validate(num):
-            if num + 5 == 5:
+            if num + 6 == 6:
+                arr_length = 400
+            elif num + 6 == 7:
                 arr_length = 100
-            elif num + 5 == 6:
+            elif num + 6 == 8:
                 arr_length = 80
-            elif num + 5 == 7:
+            elif num + 6 == 9:
                 arr_length = 40
-            elif num + 5 == 8:
+            elif num + 6 == 10:
                 arr_length = 20
-            elif num + 5 == 9:
+            elif num + 6 == 11:
                 arr_length = 10
             generate_new_list()
             return num
     for num in range(5):
-        if option_pos_validate(num + 5):
+        if option_pos_validate(num + 6):
             speed = num
 
 
