@@ -559,6 +559,7 @@ def selection_sort():
                 set_color(iMin, 0)
                 iMin = j
                 set_color(iMin, 9)
+            start_timer()
             start_comp()
             refresh()
             set_color(j, 0)
@@ -602,6 +603,7 @@ def partition(arr, low, high):
     for j in range(low, high):
         set_color(i + 1, 6)
         set_color(j, 1)
+        start_timer()
         delay()
         if arr[j] <= pivot:
             set_color(i + 1, 0)
@@ -620,6 +622,8 @@ def partition(arr, low, high):
 
 # Merge Sort
 def merge_sort(array, l, r):
+    start_timer()
+    delay()
     mid = (l + r) // 2
     if l < r:
         merge_sort(array, l, mid)
@@ -635,6 +639,7 @@ def merge(array, x1, y1, x2, y2):
         set_color(i, 1)
         set_color(j, 1)
         delay()
+        start_timer()
         refresh()
         set_color(i, 10)
         set_color(j, 10)
@@ -648,12 +653,16 @@ def merge(array, x1, y1, x2, y2):
     while i <= y1:
         set_color(i, 1)
         refresh()
+        delay()
+        start_timer()
         set_color(i, 0)
         temp.append(array[i])
         i += 1
     while j <= y2:
         set_color(j, 1)
         refresh()
+        delay()
+        start_timer()
         set_color(j, 0)
         temp.append(array[j])
         j += 1
@@ -663,6 +672,8 @@ def merge(array, x1, y1, x2, y2):
         j += 1
         set_color(i, 3)
         refresh()
+        delay()
+        start_timer()
         if y2 - x1 == len(array) - 2:
             set_color(i, 5)
         else:
