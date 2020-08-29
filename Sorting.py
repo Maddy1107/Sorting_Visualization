@@ -18,7 +18,7 @@ mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
 font = pygame.font.Font('Fonts/Bold.ttf', 32)
 options = pygame.font.Font('Fonts/Bold.ttf', 20)
 options1 = pygame.font.Font('Fonts/Bold.ttf', 30)
-value = pygame.font.Font('Fonts/Comic.ttf', 18)
+value = pygame.font.Font('Fonts/Comic.ttf', 17)
 
 # Display Size
 display_width = 800
@@ -43,6 +43,9 @@ c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + disp
 speed = 2
 arr_length = 40
 algorithm = 0
+comp = 0
+duration = 0.0
+start = 0
 
 # Text Input
 user_element = ""
@@ -59,8 +62,8 @@ x = display_height
 
 # Button Position
 button_pos = [
-    (1050, 370, 100, 50),
-    (1015, 450, 160, 50)
+    (1050, 420, 100, 50),
+    (1015, 500, 160, 50)
 ]
 
 # Option Button Positions
@@ -73,18 +76,18 @@ option_pos = [
     (945, 120, 120, 30),
     (1075, 120, 120, 30),
     # Speed
-    (810, 250, 120, 30),
-    (940, 250, 120, 30),
-    (1070, 250, 120, 30),
-    (890, 300, 120, 30),
-    (1020, 300, 120, 30),
+    (820, 270, 120, 30),
+    (950, 270, 120, 30),
+    (1080, 270, 120, 30),
+    (900, 310, 120, 30),
+    (1030, 310, 120, 30),
     # Algorithm
-    (820, 390),
-    (820, 420),
-    (820, 450),
-    (820, 480),
-    (820, 510),
-    (820, 540),
+    (820, 430),
+    (820, 460),
+    (820, 490),
+    (820, 520),
+    (820, 550),
+    (820, 580),
     # Size Text
     (800, 55),
     (830, 80),
@@ -94,19 +97,20 @@ option_pos = [
     (958, 120),
     (1083, 120),
     # Speed Text
-    (800, 220),
-    (815, 250),
-    (960, 250),
-    (1077, 250),
-    (910, 300),
-    (1040, 300),
+    (800, 240),
+    (825, 270),
+    (970, 270),
+    (1085, 270),
+    (920, 315),
+    (1045, 315),
     # Algorithm text
-    (830, 345),
-    (830, 375),
-    (830, 405),
-    (830, 435),
-    (830, 465),
-    (830, 495)
+    (830, 378),
+    (830, 418),
+    (830, 448),
+    (830, 478),
+    (830, 508),
+    (830, 538),
+    (810, 343)
 
 ]
 
@@ -119,7 +123,8 @@ option_texts = [
     '---------------------- SPEED-------------------------',
     'V-Slow-100', 'Slow-80', 'Normal-40', 'Fast-10', 'V-Fast-1',
     # Algorithm
-    'ALGORITHM:', 'Bubble Sort', 'Insertion Sort', 'Selection Sort', 'Quick Sort', 'Merge Sort'
+    'ALGORITHM:', 'Bubble Sort', 'Insertion Sort', 'Selection Sort', 'Quick Sort', 'Merge Sort',
+    '-------------------------------------------------------'
 
 ]
 
@@ -151,12 +156,13 @@ screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
 inactive_color = (128, 128, 128)
 active_color = (255, 255, 255)
+value_color = (255, 255, 255)
 color_arr = []
 
 # Input Box
 active = False
 box_color = inactive_color
-input_box = pygame.Rect(810, 190, 395, 33)
+input_box = pygame.Rect(810, 203, 395, 33)
 
 run = True
 
@@ -220,14 +226,14 @@ def draw_buttons():
 
 # Draw text in button
 def draw_buttons_text():
-    screen.blit(options1.render('SORT', True, line_color), (1060, 376))
-    screen.blit(options1.render('GENERATE', True, line_color), (1020, 455))
+    screen.blit(options1.render('SORT', True, line_color), (1060, 426))
+    screen.blit(options1.render('GENERATE', True, line_color), (1020, 505))
 
 
 # Option Buttons
 def draw_option_button():
-    screen.blit(options.render('or', True, line_color), (1020, 150))
-    screen.blit(options.render('Enter your numbers manually(1-400)', True, line_color), (825, 165))
+    screen.blit(options.render('or', True, line_color), (1020, 153))
+    screen.blit(options.render('Enter your numbers manually(100-500)', True, line_color), (810, 169))
     for num in range(11):
         pygame.draw.rect(screen, button_color, option_pos[num])
         pygame.draw.rect(screen, (0, 0, 0), option_pos[num], 2)
@@ -253,7 +259,7 @@ def draw_option_button():
 
 # Draw the options
 def draw_options_text():
-    for num in range(19):
+    for num in range(20):
         screen.blit(options.render(option_texts[num], True, line_color), option_pos[num + 17])
 
 
@@ -275,6 +281,28 @@ def draw_text_box():
 # ----------------------------Draw Functions-----------------------------------------------
 
 # ----------------------------Functions for manipulating-----------------------------------------------
+
+def start_timer():
+    global duration
+    duration = time.time() - start
+
+
+def refresh_timer():
+    global duration
+    duration = 0
+
+
+# Start Comparison
+def start_comp():
+    global comp
+    comp += 1
+
+
+# Refresh Comparison
+def refresh_comp():
+    global comp
+    comp = 0
+
 
 # Change text to array
 def text_to_array():
@@ -315,27 +343,29 @@ def user_input():
 
 # Show selected values
 def values():
-    screen.blit(value.render('Length:' + str(arr_length), True, line_color), (810, 550))
+    screen.blit(value.render('Length:' + str(arr_length), True, value_color), (10, 55))
     if speed == 0:
-        screen.blit(value.render('|Speed:100', True, line_color), (899, 550))
+        screen.blit(value.render('|Speed:100', True, value_color), (103, 55))
     elif speed == 1:
-        screen.blit(value.render('|Speed:80', True, line_color), (899, 550))
+        screen.blit(value.render('|Speed:80', True, value_color), (103, 55))
     elif speed == 2:
-        screen.blit(value.render('|Speed:40', True, line_color), (899, 550))
+        screen.blit(value.render('|Speed:40', True, value_color), (103, 55))
     elif speed == 3:
-        screen.blit(value.render('|Speed:10', True, line_color), (899, 550))
+        screen.blit(value.render('|Speed:10', True, value_color), (103, 55))
     elif speed == 4:
-        screen.blit(value.render('|Speed:1', True, line_color), (899, 550))
+        screen.blit(value.render('|Speed:1', True, value_color), (103, 55))
     if algorithm == 0:
-        screen.blit(value.render('|Algorithm:Bubble Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Bubble Sort', True, value_color), (203, 55))
     elif algorithm == 1:
-        screen.blit(value.render('|Algorithm:Insertion Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Insertion Sort', True, value_color), (203, 55))
     elif algorithm == 2:
-        screen.blit(value.render('|Algorithm:Selection Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Selection Sort', True, value_color), (203, 55))
     elif algorithm == 3:
-        screen.blit(value.render('|Algorithm:Quick Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Quick Sort', True, value_color), (203, 55))
     elif algorithm == 4:
-        screen.blit(value.render('|Algorithm:Merge Sort', True, line_color), (990, 550))
+        screen.blit(value.render('|Algorithm:Merge Sort', True, value_color), (203, 55))
+    screen.blit(value.render('| Comparisons:' + str(comp), True, value_color), (427, 55))
+    screen.blit(value.render('| Elapsed time:' + str(round(duration, 2)) + ' seconds', True, value_color), (583, 55))
 
 
 # Delay
@@ -355,6 +385,8 @@ def delay():
 
 # Select the algorithm
 def sort():
+    global start
+    start = time.time()
     if algorithm == 0:
         bubble_sort()
     elif algorithm == 1:
@@ -399,6 +431,8 @@ def refill():
 # Generates a new list
 def generate_new_list():
     global unsorted_arr, color_arr
+    refresh_comp()
+    refresh_timer()
     color_arr = [bar_selected[0]] * arr_length
     unsorted_arr = []
     while len(unsorted_arr) < arr_length:
@@ -459,16 +493,16 @@ def circle_option():
     global mouse_x, mouse_y, algorithm
     mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
     for num in range(5):
-        if check_area(mouse_x, mouse_y, option_pos[num + 10][0], option_pos[num + 10][1]) < 5:
-            if num + 10 == 10:
+        if check_area(mouse_x, mouse_y, option_pos[num + 11][0], option_pos[num + 11][1]) < 5:
+            if num + 11 == 11:
                 algorithm = 0
-            elif num + 10 == 11:
+            elif num + 11 == 12:
                 algorithm = 1
-            elif num + 10 == 12:
+            elif num + 11 == 13:
                 algorithm = 2
-            elif num + 10 == 13:
+            elif num + 11 == 14:
                 algorithm = 3
-            elif num + 10 == 14:
+            elif num + 11 == 15:
                 algorithm = 4
 
 
@@ -505,9 +539,11 @@ def bubble_sort():
             delay()
             if unsorted_arr[j] > unsorted_arr[j + 1]:
                 swap(j, j + 1)
-                refresh()
+            start_comp()
+            refresh()
             set_color(j, 0)
             set_color(j + 1, 0)
+            start_timer()
         set_color(i, 3)
 
 
@@ -523,6 +559,7 @@ def selection_sort():
                 set_color(iMin, 0)
                 iMin = j
                 set_color(iMin, 9)
+            start_comp()
             refresh()
             set_color(j, 0)
         set_color(iMin, 0)
@@ -544,6 +581,7 @@ def insertion_sort():
             set_color(pos, 4)
             refresh()
             set_color(pos, 3)
+            start_comp()
         unsorted_arr[pos] = curr_el
     set_color(i, 3)
 
@@ -570,6 +608,7 @@ def partition(arr, low, high):
             i = i + 1
             set_color(i + 1, 6)
             swap(i, j)
+            start_comp()
             refresh()
         set_color(i + 1, 3)
         set_color(j, 0)
@@ -605,6 +644,7 @@ def merge(array, x1, y1, x2, y2):
         else:
             temp.append(array[j])
             j += 1
+        start_comp()
     while i <= y1:
         set_color(i, 1)
         refresh()
