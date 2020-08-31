@@ -2,11 +2,17 @@ import pygame
 import random
 import time
 import math
+import os.path
 
 pygame.init()
 
 # Setting Caption
 pygame.display.set_caption("Sorting Visualizer")
+
+# Filepaths
+filepath = os.path.dirname(__file__)
+imagepath = os.path.join(filepath, 'BG')
+font_path = os.path.join(filepath, 'Fonts')
 # ----------------------------Global Variables-----------------------------------------------
 
 # duration, start = 0, time.time()
@@ -15,10 +21,11 @@ pygame.display.set_caption("Sorting Visualizer")
 mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
 
 # Font
-font = pygame.font.Font('Fonts/Bold.ttf', 32)
-options = pygame.font.Font('Fonts/Bold.ttf', 20)
-options1 = pygame.font.Font('Fonts/Bold.ttf', 30)
-value = pygame.font.Font('Fonts/Comic.ttf', 17)
+pygame.font.init()
+font = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 32)
+options = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 20)
+options1 = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 30)
+value = pygame.font.SysFont('verdana', 17)
 
 # Display Size
 display_width = 800
@@ -28,14 +35,14 @@ display_height = 600
 container_width = 408
 
 # Header Container Size
-h_container_height = 50
+h_container_height = 80
 h_container_width = display_width + container_width
 
 # Background
-bg = pygame.image.load('BG/background.jpg')
-h_bg = pygame.image.load('BG/h_bg.jpg')
-c_bg = pygame.image.load('BG/c_bg.png')
-bg1 = pygame.transform.scale(bg, (display_width + 5, display_height))
+bg = pygame.image.load(os.path.join(imagepath, 'background.jpg'))
+h_bg = pygame.image.load(os.path.join(imagepath, 'h_bg.jpg'))
+c_bg = pygame.image.load(os.path.join(imagepath, 'c_bg.png'))
+bg1 = pygame.transform.scale(bg, (h_container_width, display_height))
 h_bg1 = pygame.transform.scale(h_bg, (h_container_width, h_container_height))
 c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + display_height))
 
@@ -46,6 +53,7 @@ algorithm = 0
 comp = 0
 duration = 0.0
 start = 0
+swapped = 0
 
 # Text Input
 user_element = ""
@@ -69,48 +77,48 @@ button_pos = [
 # Option Button Positions
 option_pos = [
     # Size
-    (815, 80, 120, 30),
-    (945, 80, 120, 30),
-    (1075, 80, 120, 30),
-    (815, 120, 120, 30),
-    (945, 120, 120, 30),
-    (1075, 120, 120, 30),
+    (815, 110, 120, 30),
+    (945, 110, 120, 30),
+    (1075, 110, 120, 30),
+    (815, 150, 120, 30),
+    (945, 150, 120, 30),
+    (1075, 150, 120, 30),
     # Speed
-    (820, 270, 120, 30),
-    (950, 270, 120, 30),
-    (1080, 270, 120, 30),
-    (900, 310, 120, 30),
-    (1030, 310, 120, 30),
+    (820, 300, 120, 30),
+    (950, 300, 120, 30),
+    (1080, 300, 120, 30),
+    (900, 340, 120, 30),
+    (1030, 340, 120, 30),
     # Algorithm
-    (820, 430),
-    (820, 460),
-    (820, 490),
-    (820, 520),
-    (820, 550),
-    (820, 580),
+    (820, 450),
+    (820, 480),
+    (820, 510),
+    (820, 540),
+    (820, 570),
+    (820, 620),
     # Size Text
-    (800, 55),
-    (830, 80),
-    (970, 80),
-    (1087, 80),
-    (817, 120),
-    (958, 120),
-    (1083, 120),
+    (800, 85),
+    (830, 110),
+    (970, 110),
+    (1087, 110),
+    (817, 150),
+    (958, 150),
+    (1083, 150),
     # Speed Text
-    (800, 240),
-    (825, 270),
-    (970, 270),
-    (1085, 270),
-    (920, 315),
-    (1045, 315),
+    (800, 265),
+    (825, 300),
+    (970, 300),
+    (1085, 300),
+    (920, 342),
+    (1045, 342),
     # Algorithm text
-    (830, 378),
-    (830, 418),
-    (830, 448),
-    (830, 478),
-    (830, 508),
-    (830, 538),
-    (810, 343)
+    (830, 388),
+    (830, 438),
+    (830, 468),
+    (830, 498),
+    (830, 528),
+    (830, 558),
+    (810, 363)
 
 ]
 
@@ -132,7 +140,7 @@ option_texts = [
 gap = 5
 
 # Screen
-screen = pygame.display.set_mode((display_width + container_width, display_height))
+screen = pygame.display.set_mode((h_container_width, display_height))
 
 # Colours
 button_color = (200, 100, 255)
@@ -156,13 +164,13 @@ screen_color = (0, 255, 0)
 line_color = (0, 0, 0)
 inactive_color = (128, 128, 128)
 active_color = (255, 255, 255)
-value_color = (255, 255, 255)
+value_color = (0, 0, 0)
 color_arr = []
 
 # Input Box
 active = False
 box_color = inactive_color
-input_box = pygame.Rect(810, 203, 395, 33)
+input_box = pygame.Rect(810, 228, 395, 33)
 
 run = True
 
@@ -174,11 +182,7 @@ run = True
 # Draw the Bars
 def draw():
     global x
-    draw_heading('SORT VISUALIZATION')
-    draw_text_box()
-    draw_option_button()
-    draw_buttons()
-    values()
+    draw_elements()
     bar_width = round((((display_width - 1) - ((arr_length - 1) * gap)) / arr_length))
     x = 5
     if arr_length < 9:
@@ -205,10 +209,15 @@ def draw():
 
 # Display Heading
 def draw_heading(message):
-    h_text = font.render(message, True, line_color)
+    h_text = font.render(message, True, (100, 0, 0))
+    h_text1 = font.render(message, True, line_color)
     h_text_rect = h_text.get_rect()
-    h_text_rect.center = (h_container_width // 2, h_container_height // 2)
+    h_text_rect1 = h_text.get_rect()
+    h_text_rect.center = (h_container_width // 2, (h_container_height // 2)-8)
+    h_text_rect1.center = ((h_container_width // 2)+3, (h_container_height // 2)-5)
+    screen.blit(h_text1, h_text_rect1)
     screen.blit(h_text, h_text_rect)
+
 
 
 # Draw the buttons
@@ -232,8 +241,8 @@ def draw_buttons_text():
 
 # Option Buttons
 def draw_option_button():
-    screen.blit(options.render('or', True, line_color), (1020, 153))
-    screen.blit(options.render('Enter your numbers manually(100-500)', True, line_color), (810, 169))
+    screen.blit(options.render('or', True, line_color), (1020, 183))
+    screen.blit(options.render('Enter your numbers manually(100-500)', True, line_color), (810, 199))
     for num in range(11):
         pygame.draw.rect(screen, button_color, option_pos[num])
         pygame.draw.rect(screen, (0, 0, 0), option_pos[num], 2)
@@ -278,15 +287,38 @@ def draw_text_box():
     screen.blit(value.render(user_element, True, line_color), (input_box.x + 5, input_box.y + 4))
 
 
+# Draw the elements everytime
+def draw_elements():
+    draw_heading('SORT VISUALIZATION')
+    draw_text_box()
+    draw_option_button()
+    draw_buttons()
+    values()
+
+
 # ----------------------------Draw Functions-----------------------------------------------
 
 # ----------------------------Functions for manipulating-----------------------------------------------
 
+# Start Swap count
+def start_swap():
+    global swapped
+    swapped += 1
+
+
+# Refresh Swap Count
+def refresh_swap():
+    global swapped
+    swapped = 0
+
+
+# Start time
 def start_timer():
     global duration
     duration = time.time() - start
 
 
+# Refresh Time
 def refresh_timer():
     global duration
     duration = 0
@@ -345,15 +377,15 @@ def user_input():
 def values():
     screen.blit(value.render('Length:' + str(arr_length), True, value_color), (10, 55))
     if speed == 0:
-        screen.blit(value.render('|Speed:100', True, value_color), (103, 55))
+        screen.blit(value.render('|Speed:100', True, value_color), (108, 55))
     elif speed == 1:
-        screen.blit(value.render('|Speed:80', True, value_color), (103, 55))
+        screen.blit(value.render('|Speed:80', True, value_color), (108, 55))
     elif speed == 2:
-        screen.blit(value.render('|Speed:40', True, value_color), (103, 55))
+        screen.blit(value.render('|Speed:40', True, value_color), (108, 55))
     elif speed == 3:
-        screen.blit(value.render('|Speed:10', True, value_color), (103, 55))
+        screen.blit(value.render('|Speed:10', True, value_color), (109, 55))
     elif speed == 4:
-        screen.blit(value.render('|Speed:1', True, value_color), (103, 55))
+        screen.blit(value.render('|Speed:1', True, value_color), (109, 55))
     if algorithm == 0:
         screen.blit(value.render('|Algorithm:Bubble Sort', True, value_color), (203, 55))
     elif algorithm == 1:
@@ -365,7 +397,11 @@ def values():
     elif algorithm == 4:
         screen.blit(value.render('|Algorithm:Merge Sort', True, value_color), (203, 55))
     screen.blit(value.render('| Comparisons:' + str(comp), True, value_color), (427, 55))
-    screen.blit(value.render('| Elapsed time:' + str(round(duration, 2)) + ' seconds', True, value_color), (583, 55))
+    screen.blit(value.render('| Elapsed time:' + str(round(duration, 2)) + ' seconds', True, value_color), (603, 55))
+    if algorithm == 0 or algorithm == 2 or algorithm == 3:
+        screen.blit(value.render('| Swaps performed:' + str(swapped), True, value_color), (893, 55))
+    else:
+        screen.blit(value.render('| Swaps performed: No swaps needed', True, value_color), (863, 55))
 
 
 # Delay
@@ -433,6 +469,7 @@ def generate_new_list():
     global unsorted_arr, color_arr
     refresh_comp()
     refresh_timer()
+    refresh_swap()
     color_arr = [bar_selected[0]] * arr_length
     unsorted_arr = []
     while len(unsorted_arr) < arr_length:
@@ -528,6 +565,7 @@ def check_text():
 # Swap
 def swap(pos1, pos2):
     unsorted_arr[pos1], unsorted_arr[pos2] = unsorted_arr[pos2], unsorted_arr[pos1]
+    start_swap()
 
 
 # Bubble Sort
@@ -615,7 +653,6 @@ def partition(arr, low, high):
         set_color(i + 1, 3)
         set_color(j, 0)
     swap(i + 1, high)
-    # set_color(i + 1, 3)
     set_color(high, 0)
     return i + 1
 
