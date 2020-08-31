@@ -25,7 +25,7 @@ pygame.font.init()
 font = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 32)
 options = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 20)
 options1 = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 30)
-value = pygame.font.SysFont('verdana', 17)
+value = pygame.font.SysFont('verdana', 15, bold=True)
 
 # Display Size
 display_width = 800
@@ -46,7 +46,7 @@ bg1 = pygame.transform.scale(bg, (h_container_width, display_height))
 h_bg1 = pygame.transform.scale(h_bg, (h_container_width, h_container_height))
 c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + display_height))
 
-# Default Size,Speed,Algorithm
+# Default Values
 speed = 2
 arr_length = 40
 algorithm = 0
@@ -54,6 +54,9 @@ comp = 0
 duration = 0.0
 start = 0
 swapped = 0
+sort_speed = '40'
+technique_name = 'Bubble Sort'
+seconds = 1
 
 # Text Input
 user_element = ""
@@ -209,15 +212,14 @@ def draw():
 
 # Display Heading
 def draw_heading(message):
-    h_text = font.render(message, True, (100, 0, 0))
+    h_text = font.render(message, True, (255, 0, 0))
     h_text1 = font.render(message, True, line_color)
     h_text_rect = h_text.get_rect()
     h_text_rect1 = h_text.get_rect()
-    h_text_rect.center = (h_container_width // 2, (h_container_height // 2)-8)
-    h_text_rect1.center = ((h_container_width // 2)+3, (h_container_height // 2)-5)
+    h_text_rect.center = (h_container_width // 2, (h_container_height // 2) - 8)
+    h_text_rect1.center = ((h_container_width // 2) + 3, (h_container_height // 2) - 5)
     screen.blit(h_text1, h_text_rect1)
     screen.blit(h_text, h_text_rect)
-
 
 
 # Draw the buttons
@@ -375,53 +377,51 @@ def user_input():
 
 # Show selected values
 def values():
-    screen.blit(value.render('Length:' + str(arr_length), True, value_color), (10, 55))
-    if speed == 0:
-        screen.blit(value.render('|Speed:100', True, value_color), (108, 55))
-    elif speed == 1:
-        screen.blit(value.render('|Speed:80', True, value_color), (108, 55))
-    elif speed == 2:
-        screen.blit(value.render('|Speed:40', True, value_color), (108, 55))
-    elif speed == 3:
-        screen.blit(value.render('|Speed:10', True, value_color), (109, 55))
-    elif speed == 4:
-        screen.blit(value.render('|Speed:1', True, value_color), (109, 55))
-    if algorithm == 0:
-        screen.blit(value.render('|Algorithm:Bubble Sort', True, value_color), (203, 55))
-    elif algorithm == 1:
-        screen.blit(value.render('|Algorithm:Insertion Sort', True, value_color), (203, 55))
-    elif algorithm == 2:
-        screen.blit(value.render('|Algorithm:Selection Sort', True, value_color), (203, 55))
-    elif algorithm == 3:
-        screen.blit(value.render('|Algorithm:Quick Sort', True, value_color), (203, 55))
-    elif algorithm == 4:
-        screen.blit(value.render('|Algorithm:Merge Sort', True, value_color), (203, 55))
-    screen.blit(value.render('| Comparisons:' + str(comp), True, value_color), (427, 55))
-    screen.blit(value.render('| Elapsed time:' + str(round(duration, 2)) + ' seconds', True, value_color), (603, 55))
-    if algorithm == 0 or algorithm == 2 or algorithm == 3:
-        screen.blit(value.render('| Swaps performed:' + str(swapped), True, value_color), (893, 55))
+    screen.blit(value.render('Current Selection:-' + technique_name + ' with ' +
+                             str(arr_length) + ' elements and ' +
+                             sort_speed + ' ms delay'
+                             , True, value_color), (10, 55))
+    if round(duration) >= 60:
+        # if round(duration)%60
+        screen.blit(value.render('Elapsed time: ' + str(round(duration) // 60) + ' minutes ' +
+                                 str(round(duration) % 60) + ' seconds', True, value_color), (800, 55))
     else:
-        screen.blit(value.render('| Swaps performed: No swaps needed', True, value_color), (863, 55))
+        screen.blit(value.render('Elapsed time: 0 minutes ' +
+                                 str(round(duration)) + ' seconds', True, value_color), (800, 55))
+
+    if algorithm == 0 or algorithm == 2 or algorithm == 3:
+        screen.blit(value.render(str(comp) + ' comparisons -- ' +
+                                 str(swapped) + ' swaps done',
+                                 True, (255, 255, 255)), (10, 78))
+    else:
+        screen.blit(value.render(str(comp) + ' comparisons -- ' +
+                                 'No swap needed',
+                                 True, (255, 255, 255)), (10, 78))
 
 
 # Delay
 def delay():
-    global speed
+    global speed, sort_speed
     if speed == 0:
         pygame.time.delay(100)
+        sort_speed = '100'
     if speed == 1:
         pygame.time.delay(80)
+        sort_speed = '80'
     if speed == 2:
         pygame.time.delay(40)
+        sort_speed = '40'
     if speed == 3:
         pygame.time.delay(10)
+        sort_speed = '10'
     if speed == 4:
         pygame.time.delay(1)
+        sort_speed = '1'
 
 
 # Select the algorithm
 def sort():
-    global start
+    global start, technique_name
     start = time.time()
     if algorithm == 0:
         bubble_sort()
@@ -527,20 +527,25 @@ def option_button_press():
 
 # Circle Validate
 def circle_option():
-    global mouse_x, mouse_y, algorithm
+    global mouse_x, mouse_y, algorithm, technique_name
     mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
     for num in range(5):
         if check_area(mouse_x, mouse_y, option_pos[num + 11][0], option_pos[num + 11][1]) < 5:
             if num + 11 == 11:
                 algorithm = 0
+                technique_name = 'Bubble Sort'
             elif num + 11 == 12:
                 algorithm = 1
+                technique_name = 'Insertion Sort'
             elif num + 11 == 13:
                 algorithm = 2
+                technique_name = 'Selection Sort'
             elif num + 11 == 14:
                 algorithm = 3
+                technique_name = 'Quick Sort'
             elif num + 11 == 15:
                 algorithm = 4
+                technique_name = 'Merge Sort'
 
 
 # Checking if the point is inside circle
