@@ -12,8 +12,6 @@ To run this in your machine:
 3. Now go to the projects folder and Shift+Right Click -> Open Command window here.
     a. Type python <<Script name>>
 
-# ------------------------------------------------------ENJOY-------------------------------------------------------
-
 #------------------------------------------- **Functionality of the Game**------------------------------------------
 
 1. After running an array with random element is generated.
