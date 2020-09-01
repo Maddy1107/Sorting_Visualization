@@ -619,6 +619,7 @@ def insertion_sort():
             unsorted_arr[pos] = unsorted_arr[pos - 1]
             pos = pos - 1
             set_color(pos, 4)
+            start_timer()
             refresh()
             set_color(pos, 3)
             start_comp()
