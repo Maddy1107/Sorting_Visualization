@@ -9,6 +9,7 @@ pygame.init()
 # Setting Caption
 pygame.display.set_caption("Sorting Visualizer")
 
+
 # Filepaths
 filepath = os.path.dirname(__file__)
 imagepath = os.path.join(filepath, 'BG')
@@ -35,16 +36,18 @@ display_height = 600
 container_width = 408
 
 # Header Container Size
-h_container_height = 80
+h_container_height = 70
 h_container_width = display_width + container_width
 
 # Background
 bg = pygame.image.load(os.path.join(imagepath, 'background.jpg'))
 h_bg = pygame.image.load(os.path.join(imagepath, 'h_bg.jpg'))
 c_bg = pygame.image.load(os.path.join(imagepath, 'c_bg.png'))
+icon = pygame.image.load(os.path.join(imagepath, 'sort_icon.ico'))
 bg1 = pygame.transform.scale(bg, (h_container_width, display_height))
 h_bg1 = pygame.transform.scale(h_bg, (h_container_width, h_container_height))
 c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + display_height))
+pygame.display.set_icon(icon)
 
 # Default Values
 speed = 2
@@ -54,9 +57,8 @@ comp = 0
 duration = 0.0
 start = 0
 swapped = 0
-sort_speed = '40'
+sort_speed = {0: '100', 1: '80', 2: '40', 3: '10', 4: '1'}
 technique_name = 'Bubble Sort'
-seconds = 1
 
 # Text Input
 user_element = ""
@@ -379,15 +381,14 @@ def user_input():
 def values():
     screen.blit(value.render('Current Selection:-' + technique_name + ' with ' +
                              str(arr_length) + ' elements and ' +
-                             sort_speed + ' ms delay'
-                             , True, value_color), (10, 55))
+                             sort_speed[speed] + ' ms delay'
+                             , True, value_color), (10, 50))
     if round(duration) >= 60:
-        # if round(duration)%60
         screen.blit(value.render('Elapsed time: ' + str(round(duration) // 60) + ' minutes ' +
-                                 str(round(duration) % 60) + ' seconds', True, value_color), (800, 55))
+                                 str(round(duration) % 60) + ' seconds', True, value_color), (800, 50))
     else:
         screen.blit(value.render('Elapsed time: 0 minutes ' +
-                                 str(round(duration)) + ' seconds', True, value_color), (800, 55))
+                                 str(round(duration)) + ' seconds', True, value_color), (800, 50))
 
     if algorithm == 0 or algorithm == 2 or algorithm == 3:
         screen.blit(value.render(str(comp) + ' comparisons -- ' +
@@ -404,19 +405,14 @@ def delay():
     global speed, sort_speed
     if speed == 0:
         pygame.time.delay(100)
-        sort_speed = '100'
     if speed == 1:
         pygame.time.delay(80)
-        sort_speed = '80'
     if speed == 2:
         pygame.time.delay(40)
-        sort_speed = '40'
     if speed == 3:
         pygame.time.delay(10)
-        sort_speed = '10'
     if speed == 4:
         pygame.time.delay(1)
-        sort_speed = '1'
 
 
 # Select the algorithm
