@@ -9,11 +9,10 @@ pygame.init()
 # Setting Caption
 pygame.display.set_caption("Sorting Visualizer")
 
-
-# Filepaths
-filepath = os.path.dirname(__file__)
-imagepath = os.path.join(filepath, 'BG')
-font_path = os.path.join(filepath, 'Fonts')
+# # Filepaths
+# filepath = os.path.dirname(__file__)
+# imagepath = os.path.join(filepath, 'BG')
+# font_path = os.path.join(filepath, 'Fonts')
 # ----------------------------Global Variables-----------------------------------------------
 
 # duration, start = 0, time.time()
@@ -21,11 +20,17 @@ font_path = os.path.join(filepath, 'Fonts')
 # Mouse Positions
 mouse_x, mouse_y = pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]
 
+# # Font
+# pygame.font.init()
+# font = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 32)
+# options = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 20)
+# options1 = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 30)
+# value = pygame.font.SysFont('verdana', 15, bold=True)
 # Font
 pygame.font.init()
-font = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 32)
-options = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 20)
-options1 = pygame.font.Font((os.path.join(font_path, 'Option_f.ttf')), 30)
+font = pygame.font.Font('assets/Fonts/Option_f.ttf', 32)
+options = pygame.font.Font('assets/Fonts/Option_f.ttf', 20)
+options1 = pygame.font.Font('assets/Fonts/Option_f.ttf', 30)
 value = pygame.font.SysFont('verdana', 15, bold=True)
 
 # Display Size
@@ -40,10 +45,10 @@ h_container_height = 70
 h_container_width = display_width + container_width
 
 # Background
-bg = pygame.image.load(os.path.join(imagepath, 'background.jpg'))
-h_bg = pygame.image.load(os.path.join(imagepath, 'h_bg.jpg'))
-c_bg = pygame.image.load(os.path.join(imagepath, 'c_bg.png'))
-icon = pygame.image.load(os.path.join(imagepath, 'sort_icon.ico'))
+bg = pygame.image.load('assets/BG/background.jpg')
+h_bg = pygame.image.load('assets/BG/h_bg.jpg')
+c_bg = pygame.image.load('assets/BG/c_bg.png')
+icon = pygame.image.load('assets/BG/sort_icon.ico')
 bg1 = pygame.transform.scale(bg, (h_container_width, display_height))
 h_bg1 = pygame.transform.scale(h_bg, (h_container_width, h_container_height))
 c_bg1 = pygame.transform.scale(c_bg, (container_width, h_container_height + display_height))
