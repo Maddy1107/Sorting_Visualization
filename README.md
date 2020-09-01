@@ -11,6 +11,10 @@ To run this in your machine:
     c.Type pip install pygame.
 3. Now go to the projects folder and Shift+Right Click -> Open Command window here.
     a. Type python <<Script name>>
+    
+#-----OR----
+
+Just run the executable file.
 
 #------------------------------------------- **Functionality of the Game**------------------------------------------
 
