@@ -1,4 +1,4 @@
-# Sort_Visualize
+# Sorting Visualization
 
 This is simple program to visualize the various sorting techniques used in Data Structures
 This project is implemented in Python using the pygame module.
